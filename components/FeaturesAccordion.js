@@ -12,9 +12,9 @@ import Image from "next/image";
 // - alt: The alt text of the image (if type is 'image')
 const features = [
   {
-    title: "Emails",
+    title: "1-on-1 Video Calling",
     description:
-      "Send transactional emails, setup your DNS to avoid spam folder (DKIM, DMARC, SPF in subdomain), and listen to webhook to receive & forward emails",
+      "Engage with clients personally through seamless video consultations using our reliable iStream integration, ensuring high-quality interactions regardless of location.",
     type: "video",
     path: "https://d3m8mk7e1mf7xn.cloudfront.net/app/newsletter.webm",
     format: "video/webm",
@@ -35,9 +35,9 @@ const features = [
     ),
   },
   {
-    title: "Payments",
+    title: "Interactive Calendar and Scheduling",
     description:
-      "Create checkout sessions, handle webhooks to update user's account (subscriptions, one-time payments...) and tips to setup your account & reduce chargebacks",
+      "asily manage your appointments with a fully integrated calendar. Schedule sessions, set reminders, and avoid conflicts effortlessly, allowing you to focus more on training and less on administration.",
     type: "image",
     path: "https://images.unsplash.com/photo-1571171637578-41bc2dd41cd2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=3540&q=80",
     alt: "A computer",
@@ -59,9 +59,9 @@ const features = [
     ),
   },
   {
-    title: "Authentication",
+    title: "User Accounts and Secure Authentication",
     description:
-      "Magic links setup, login with Google walkthrough, save user in MongoDB/Supabase, private/protected pages & API calls",
+      "Each trainer and client receives a secure account, ensuring data privacy and easy access to training schedules, workout plans, and nutritional guidance.",
     svg: (
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -80,9 +80,9 @@ const features = [
     ),
   },
   {
-    title: "Style",
+    title: "Custom Workout Generator",
     description:
-      "Components, animations & sections (like this features section), 20+ themes with daisyUI, automatic dark mode",
+      "Utilize our advanced LLM-powered workout generator to create personalized workout plans tailored to each client's unique fitness goals, available equipment, and fitness level.",
     svg: (
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -196,7 +196,7 @@ const FeaturesAccordion = () => {
     >
       <div className="px-8">
         <h2 className="font-extrabold text-4xl lg:text-6xl tracking-tight mb-12 md:mb-24">
-          All you need to ship your startup fast
+          All you need to elevate your training business fast
           <span className="bg-neutral text-neutral-content px-2 md:px-4 ml-1 md:ml-1.5 leading-relaxed whitespace-nowrap">
             and get profitable
           </span>

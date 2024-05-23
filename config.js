@@ -2,12 +2,12 @@ import themes from "daisyui/src/theming/themes";
 
 const config = {
   // REQUIRED
-  appName: "ShipFast",
+  appName: "BodyBase",
   // REQUIRED: a short description of your app for SEO tags (can be overwritten)
   appDescription:
     "The NextJS boilerplate with all you need to build your SaaS, AI tool, or any other web app.",
   // REQUIRED (no https://, not trialing slash at the end, just the naked domain)
-  domainName: "shipfa.st",
+  domainName: "BodyBase",
   crisp: {
     // Crisp website ID. IF YOU DON'T USE CRISP: just remove this => Then add a support email in this config file (mailgun.supportEmail) otherwise customer support won't work.
     id: "",
@@ -32,12 +32,12 @@ const config = {
         // If you have an anchor price (i.e. $29) that you want to display crossed out, put it here. Otherwise, leave it empty
         priceAnchor: 99,
         features: [
+          { name: "Custom Workout Generator" },
           {
-            name: "NextJS boilerplate",
+            name: "1-on-1 Video Calling*",
           },
-          { name: "User oauth" },
-          { name: "Database" },
-          { name: "Emails" },
+          { name: "Calendar and Scheduling" },
+          { name: "Nutrition Meal Generator" },
         ],
       },
       {
@@ -52,14 +52,14 @@ const config = {
         price: 99,
         priceAnchor: 149,
         features: [
+          { name: "Custom Workout Generator" },
           {
-            name: "NextJS boilerplate",
+            name: "1-on-1 Video Calling",
           },
-          { name: "User oauth" },
-          { name: "Database" },
-          { name: "Emails" },
-          { name: "1 year of updates" },
-          { name: "24/7 support" },
+          { name: "Advanced Analytics" },
+          { name: "Calendar and Scheduling" },
+          { name: "Nutrition Meal Generator" },
+          { name: "Premium 24/7 Support" },
         ],
       },
     ],
@@ -93,7 +93,7 @@ const config = {
     // REQUIRED — the path to log in users. It's use to protect private routes (like /dashboard). It's used in apiClient (/libs/api.js) upon 401 errors from our API
     loginUrl: "/signin",
     // REQUIRED — the path you want to redirect users after successfull login (i.e. /dashboard, /private). This is normally a private page for users to manage their accounts. It's used in apiClient (/libs/api.js) upon 401 errors from our API & in ButtonSignin.js
-    callbackUrl: "/dashboard",
+    callbackUrl: "/dashboard/dash",
   },
 };
 
