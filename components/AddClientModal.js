@@ -29,11 +29,16 @@ import { useToast } from "@/components/ui/use-toast"; // Import the useToast hoo
 
 export default function AddClientModal({ open, onClose }) {
   const [formData, setFormData] = useState({
-    name: "",
-    status: "",
-    price: "",
-    totalSales: "",
-    clientSince: "",
+    firstName: "",
+    lastName: "",
+    email: "",
+    phone: "",
+    gender: "",
+    dateOfBirth: "",
+    startWeight: "",
+    startBodyFatPercentage: "",
+    startBmi: "",
+    notes: "",
   });
 
   const { toast } = useToast(); // Destructure the toast function from useToast
@@ -46,29 +51,20 @@ export default function AddClientModal({ open, onClose }) {
     }));
   };
 
-  const handleStatusChange = (value) => {
-    setFormData((prevData) => ({
-      ...prevData,
-      status: value,
-    }));
-  };
-
-  const handleTotalSalesChange = (value) => {
-    setFormData((prevData) => ({
-      ...prevData,
-      totalSales: value,
-    }));
-  };
-
   const handleSubmit = async () => {
     try {
-      const { data, error } = await supabase.from("new_clients").insert([
+      const { data, error } = await supabase.from("fitness_clients").insert([
         {
-          name: formData.name,
-          status: formData.status,
-          price: formData.price,
-          total_sales: formData.totalSales,
-          member_since: formData.clientSince,
+          first_name: formData.firstName,
+          last_name: formData.lastName,
+          email: formData.email,
+          phone: formData.phone,
+          gender: formData.gender,
+          date_of_birth: formData.dateOfBirth,
+          start_weight: formData.startWeight,
+          start_body_fat_percentage: formData.startBodyFatPercentage,
+          start_bmi: formData.startBmi,
+          notes: formData.notes,
         },
       ]);
 
@@ -137,59 +133,109 @@ export default function AddClientModal({ open, onClose }) {
                       onSubmit={(e) => e.preventDefault()}
                     >
                       <div className="grid gap-3">
-                        <Label htmlFor="name">Name</Label>
+                        <Label htmlFor="firstName">First Name</Label>
                         <Input
-                          id="name"
+                          id="firstName"
                           type="text"
                           className="w-full"
-                          value={formData.name}
+                          value={formData.firstName}
                           onChange={handleChange}
                         />
                       </div>
                       <div className="grid gap-3">
-                        <Label htmlFor="status">Status</Label>
-                        <Select onValueChange={handleStatusChange}>
-                          <SelectTrigger id="status" aria-label="Select status">
-                            <SelectValue placeholder="Select status" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="Active">Active</SelectItem>
-                            <SelectItem value="Inactive">Inactive</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </div>
-                      <div className="grid gap-3">
-                        <Label htmlFor="price">Price</Label>
+                        <Label htmlFor="lastName">Last Name</Label>
                         <Input
-                          id="price"
+                          id="lastName"
                           type="text"
                           className="w-full"
-                          value={formData.price}
+                          value={formData.lastName}
                           onChange={handleChange}
                         />
                       </div>
                       <div className="grid gap-3">
-                        <Label htmlFor="total-sales">Total Sales</Label>
-                        <Select onValueChange={handleTotalSalesChange}>
-                          <SelectTrigger
-                            id="total-sales"
-                            aria-label="Select total sales"
-                          >
-                            <SelectValue placeholder="Select total sales" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="Recurring">Recurring</SelectItem>
-                            <SelectItem value="One time">One time</SelectItem>
-                          </SelectContent>
-                        </Select>
+                        <Label htmlFor="email">Email</Label>
+                        <Input
+                          id="email"
+                          type="email"
+                          className="w-full"
+                          value={formData.email}
+                          onChange={handleChange}
+                        />
                       </div>
                       <div className="grid gap-3">
-                        <Label htmlFor="clientSince">Client Since</Label>
+                        <Label htmlFor="phone">Phone</Label>
                         <Input
-                          id="clientSince"
+                          id="phone"
+                          type="text"
+                          className="w-full"
+                          value={formData.phone}
+                          onChange={handleChange}
+                        />
+                      </div>
+                      <div className="grid gap-3">
+                        <Label htmlFor="gender">Gender</Label>
+                        <Input
+                          id="gender"
+                          type="text"
+                          className="w-full"
+                          value={formData.gender}
+                          onChange={handleChange}
+                        />
+                      </div>
+                      <div className="grid gap-3">
+                        <Label htmlFor="dateOfBirth">Date of Birth</Label>
+                        <Input
+                          id="dateOfBirth"
                           type="date"
                           className="w-full"
-                          value={formData.clientSince}
+                          value={formData.dateOfBirth}
+                          onChange={handleChange}
+                        />
+                      </div>
+                      <div className="grid gap-3">
+                        <Label htmlFor="startWeight">
+                          Starting Weight (kg)
+                        </Label>
+                        <Input
+                          id="startWeight"
+                          type="number"
+                          step="0.1"
+                          className="w-full"
+                          value={formData.startWeight}
+                          onChange={handleChange}
+                        />
+                      </div>
+                      <div className="grid gap-3">
+                        <Label htmlFor="startBodyFatPercentage">
+                          Starting Body Fat Percentage (%)
+                        </Label>
+                        <Input
+                          id="startBodyFatPercentage"
+                          type="number"
+                          step="0.1"
+                          className="w-full"
+                          value={formData.startBodyFatPercentage}
+                          onChange={handleChange}
+                        />
+                      </div>
+                      <div className="grid gap-3">
+                        <Label htmlFor="startBmi">Starting BMI</Label>
+                        <Input
+                          id="startBmi"
+                          type="number"
+                          step="0.1"
+                          className="w-full"
+                          value={formData.startBmi}
+                          onChange={handleChange}
+                        />
+                      </div>
+                      <div className="grid gap-3">
+                        <Label htmlFor="notes">Notes</Label>
+                        <Input
+                          id="notes"
+                          type="text"
+                          className="w-full"
+                          value={formData.notes}
                           onChange={handleChange}
                         />
                       </div>

@@ -2,13 +2,13 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import {
-  File,
-  PlusCircle,
   Search,
+  PlusCircle,
   ListFilter,
   MoreHorizontal,
+  PanelLeft,
+  File,
 } from "lucide-react";
-import { PanelLeft } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
 import {
@@ -52,13 +52,15 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import AddClientModal from "@/components/AddClientModal";
 import { supabase } from "@/app/utils/supabaseClient";
 
-const Clients = () => {
+const ClientProgress = () => {
   const [open, setOpen] = useState(false);
   const [clients, setClients] = useState([]);
 
   useEffect(() => {
     const fetchClients = async () => {
-      const { data, error } = await supabase.from("new_clients").select("*");
+      const { data, error } = await supabase
+        .from("fitness_clients")
+        .select("*");
       if (error) {
         console.error("Error fetching clients: ", error);
       } else {
@@ -72,14 +74,14 @@ const Clients = () => {
   const handleDelete = async (id) => {
     try {
       const { error } = await supabase
-        .from("new_clients")
+        .from("fitness_clients")
         .delete()
-        .eq("id", id);
+        .eq("client_id", id);
       if (error) {
         console.error("Error deleting client: ", error);
       } else {
         setClients((prevClients) =>
-          prevClients.filter((client) => client.id !== id)
+          prevClients.filter((client) => client.client_id !== id)
         );
       }
     } catch (error) {
@@ -113,7 +115,7 @@ const Clients = () => {
                 </BreadcrumbItem>
                 <BreadcrumbSeparator />
                 <BreadcrumbItem>
-                  <BreadcrumbPage>All Clients</BreadcrumbPage>
+                  <BreadcrumbPage>Client Progress</BreadcrumbPage>
                 </BreadcrumbItem>
               </BreadcrumbList>
             </Breadcrumb>
@@ -176,7 +178,7 @@ const Clients = () => {
               <TabsContent value="all">
                 <Card x-chunk="dashboard-06-chunk-0">
                   <CardHeader>
-                    <CardTitle>Clients</CardTitle>
+                    <CardTitle>Clients Progress</CardTitle>
                     <CardDescription>
                       Manage your clients and view their performance.
                     </CardDescription>
@@ -186,41 +188,33 @@ const Clients = () => {
                       <TableHeader>
                         <TableRow>
                           <TableHead>Name</TableHead>
-                          <TableHead>Status</TableHead>
-                          <TableHead className="hidden md:table-cell">
-                            Price
-                          </TableHead>
-                          <TableHead className="hidden md:table-cell">
-                            Total Sales
-                          </TableHead>
-                          <TableHead className="hidden md:table-cell">
-                            Member Since
-                          </TableHead>
-                          <TableHead>
-                            <span className="sr-only">Actions</span>
-                          </TableHead>
+                          <TableHead>Start Weight</TableHead>
+                          <TableHead>Current Weight</TableHead>
+                          <TableHead>Body Fat Percentage</TableHead>
+                          <TableHead>BMI</TableHead>
+                          <TableHead>Number of Workouts</TableHead>
+                          <TableHead>Notes</TableHead>
+                          <TableHead>Actions</TableHead>
                         </TableRow>
                       </TableHeader>
                       <TableBody>
                         {clients.map((client) => (
-                          <TableRow key={client.id}>
+                          <TableRow key={client.client_id}>
                             <TableCell className="font-medium">
-                              {client.name}
+                              <Link
+                                href={`/dashboard/client-progress/${client.client_id}`}
+                              >
+                                {client.first_name} {client.last_name}
+                              </Link>
                             </TableCell>
+                            <TableCell>{client.start_weight} kg</TableCell>
+                            <TableCell>{client.current_weight} kg</TableCell>
                             <TableCell>
-                              <Badge variant="outline">{client.status}</Badge>
+                              {client.body_fat_percentage} %
                             </TableCell>
-                            <TableCell className="hidden md:table-cell">
-                              {client.price}
-                            </TableCell>
-                            <TableCell className="hidden md:table-cell">
-                              {client.total_sales}
-                            </TableCell>
-                            <TableCell className="hidden md:table-cell">
-                              {new Date(
-                                client.member_since
-                              ).toLocaleDateString()}
-                            </TableCell>
+                            <TableCell>{client.bmi}</TableCell>
+                            <TableCell>{client.number_of_workouts}</TableCell>
+                            <TableCell>{client.notes}</TableCell>
                             <TableCell>
                               <DropdownMenu>
                                 <DropdownMenuTrigger asChild>
@@ -237,7 +231,9 @@ const Clients = () => {
                                   <DropdownMenuLabel>Actions</DropdownMenuLabel>
                                   <DropdownMenuItem>Edit</DropdownMenuItem>
                                   <DropdownMenuItem
-                                    onClick={() => handleDelete(client.id)}
+                                    onClick={() =>
+                                      handleDelete(client.client_id)
+                                    }
                                   >
                                     Delete
                                   </DropdownMenuItem>
@@ -267,4 +263,4 @@ const Clients = () => {
   );
 };
 
-export default Clients;
+export default ClientProgress;
