@@ -2,8 +2,7 @@
 import React, { useEffect, useState } from "react";
 import { supabase } from "@/app/utils/supabaseClient";
 import { Button } from "@/components/ui/button";
-import { Calendar } from "@/components/ui/calendar";
-import AddEventModal from "@/components/AddEventModal"; // Import the AddEventModal
+import AddEventModal from "@/components/AddEventModal";
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
@@ -18,11 +17,10 @@ import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@/components/ui/popover"; // Import Popover components
+} from "@/components/ui/popover";
 
 const MyCalendar = () => {
   const [events, setEvents] = useState([]);
-  const [selectedDate, setSelectedDate] = useState(new Date());
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
@@ -60,12 +58,48 @@ const MyCalendar = () => {
     addEvent(newEvent);
   };
 
-  const handleDayClick = (date) => {
-    setSelectedDate(date);
+  const handleIntegrateGoogleCalendar = () => {
+    window.location.href = "/api/google-auth";
   };
 
+  const fetchGoogleCalendarEvents = async (accessToken) => {
+    try {
+      const response = await fetch("/api/calendar", {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+      const data = await response.json();
+      if (response.ok) {
+        // Process the Google Calendar events data
+        console.log("Google Calendar events:", data);
+      } else {
+        console.error("Error fetching Google Calendar events:", data.error);
+      }
+    } catch (error) {
+      console.error("Error fetching Google Calendar events:", error);
+    }
+  };
+
+  useEffect(() => {
+    const fetchAccessToken = async () => {
+      const cookies = document.cookie.split("; ");
+      const accessTokenCookie = cookies.find((row) =>
+        row.startsWith("google_access_token")
+      );
+      if (accessTokenCookie) {
+        const accessToken = accessTokenCookie.split("=")[1];
+        if (accessToken) {
+          fetchGoogleCalendarEvents(accessToken);
+        }
+      }
+    };
+    fetchAccessToken();
+  }, []);
+
   return (
-    <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12 bg-[#FAFBFC]">
       <div className="bg-white dark:bg-gray-950 rounded-lg shadow-lg p-6 w-full mb-6">
         <h2 className="text-xl font-bold mb-4">Upcoming Events</h2>
         <div className="space-y-4 overflow-y-auto max-h-64">
@@ -126,7 +160,12 @@ const MyCalendar = () => {
               Week
             </Button>
           </div>
-          <Button onClick={() => setIsModalOpen(true)}>Add Event</Button>
+          <div className="flex items-center gap-4">
+            <Button onClick={() => setIsModalOpen(true)}>Add Event</Button>
+            <Button onClick={handleIntegrateGoogleCalendar}>
+              Integrate Google Calendar
+            </Button>
+          </div>
         </div>
         <div className="grid grid-cols-7 gap-4 h-full">
           <div className="col-span-7 border rounded-lg border-gray-200 dark:border-gray-800 p-4 h-full overflow-hidden">

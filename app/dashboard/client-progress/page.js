@@ -1,4 +1,5 @@
 "use client";
+
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import {
@@ -30,12 +31,12 @@ import {
 } from "@/components/ui/card";
 import {
   DropdownMenu,
-  DropdownMenuCheckboxItem,
+  DropdownMenuTrigger,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuCheckboxItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
-  DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
@@ -55,6 +56,8 @@ import { supabase } from "@/app/utils/supabaseClient";
 const ClientProgress = () => {
   const [open, setOpen] = useState(false);
   const [clients, setClients] = useState([]);
+  const [selectedWeek, setSelectedWeek] = useState(0); // 0 for starting data
+  const [weeklyData, setWeeklyData] = useState({});
 
   useEffect(() => {
     const fetchClients = async () => {
@@ -70,6 +73,39 @@ const ClientProgress = () => {
 
     fetchClients();
   }, []);
+
+  useEffect(() => {
+    const fetchAllWeeklyData = async () => {
+      const allWeeklyData = {};
+      for (const client of clients) {
+        if (selectedWeek === 0) {
+          allWeeklyData[client.client_id] = client;
+        } else {
+          const { data, error } = await supabase
+            .from("weekly_reports")
+            .select("*")
+            .eq("client_id", client.client_id)
+            .eq("week", selectedWeek)
+            .single();
+          if (error) {
+            console.error(
+              "Error fetching weekly data for client",
+              client.client_id,
+              error
+            );
+            allWeeklyData[client.client_id] = {};
+          } else {
+            allWeeklyData[client.client_id] = data;
+          }
+        }
+      }
+      setWeeklyData(allWeeklyData);
+    };
+
+    if (clients.length > 0) {
+      fetchAllWeeklyData();
+    }
+  }, [selectedWeek, clients]);
 
   const handleDelete = async (id) => {
     try {
@@ -91,6 +127,44 @@ const ClientProgress = () => {
 
   const handleDialogOpen = () => setOpen(true);
   const handleDialogClose = () => setOpen(false);
+
+  const renderClientData = (client) => {
+    const data = weeklyData[client.client_id] || {};
+
+    return (
+      <TableRow key={client.client_id}>
+        <TableCell className="font-medium">
+          <Link href={`/dashboard/client-progress/${client.client_id}`}>
+            {client.first_name} {client.last_name}
+          </Link>
+        </TableCell>
+        <TableCell>{client.start_weight} lbs</TableCell>
+        <TableCell>{data.weight || client.start_weight} lbs</TableCell>
+        <TableCell>
+          {data.body_weight_percentage || client.start_body_fat_percentage} %
+        </TableCell>
+        <TableCell>{data.bmi || client.start_bmi}</TableCell>
+        <TableCell>{data.number_of_workouts || "N/A"}</TableCell>
+        <TableCell>{data.notes || "N/A"}</TableCell>
+        <TableCell>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button aria-haspopup="true" size="icon" variant="ghost">
+                <MoreHorizontal className="h-4 w-4" />
+                <span className="sr-only">Toggle menu</span>
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuItem>Edit</DropdownMenuItem>
+              <DropdownMenuItem onClick={() => handleDelete(client.client_id)}>
+                Delete
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </TableCell>
+      </TableRow>
+    );
+  };
 
   return (
     <TooltipProvider>
@@ -133,6 +207,14 @@ const ClientProgress = () => {
                 Add Client
               </span>
             </Button>
+            <Link href="/dashboard/upload">
+              <Button size="sm" className="h-8 gap-1">
+                <File className="h-3.5 w-3.5" />
+                <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
+                  Upload Data
+                </span>
+              </Button>
+            </Link>
           </header>
           <main className="grid flex-1 items-start gap-4 p-4 sm:px-6 sm:py-0 md:gap-8">
             <Tabs defaultValue="all">
@@ -175,6 +257,32 @@ const ClientProgress = () => {
                   </Button>
                 </div>
               </div>
+              <div className="mt-4 mb-4 flex justify-end">
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button
+                      variant="outline"
+                      className="flex items-center gap-2"
+                    >
+                      Week {selectedWeek === 0 ? "Starting Data" : selectedWeek}
+                      <ChevronDownIcon className="h-4 w-4" />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end">
+                    <DropdownMenuItem onSelect={() => setSelectedWeek(0)}>
+                      Starting Data
+                    </DropdownMenuItem>
+                    {Array.from({ length: 12 }, (_, i) => i + 1).map((week) => (
+                      <DropdownMenuItem
+                        key={week}
+                        onSelect={() => setSelectedWeek(week)}
+                      >
+                        Week {week}
+                      </DropdownMenuItem>
+                    ))}
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </div>
               <TabsContent value="all">
                 <Card x-chunk="dashboard-06-chunk-0">
                   <CardHeader>
@@ -198,50 +306,7 @@ const ClientProgress = () => {
                         </TableRow>
                       </TableHeader>
                       <TableBody>
-                        {clients.map((client) => (
-                          <TableRow key={client.client_id}>
-                            <TableCell className="font-medium">
-                              <Link
-                                href={`/dashboard/client-progress/${client.client_id}`}
-                              >
-                                {client.first_name} {client.last_name}
-                              </Link>
-                            </TableCell>
-                            <TableCell>{client.start_weight} kg</TableCell>
-                            <TableCell>{client.current_weight} kg</TableCell>
-                            <TableCell>
-                              {client.body_fat_percentage} %
-                            </TableCell>
-                            <TableCell>{client.bmi}</TableCell>
-                            <TableCell>{client.number_of_workouts}</TableCell>
-                            <TableCell>{client.notes}</TableCell>
-                            <TableCell>
-                              <DropdownMenu>
-                                <DropdownMenuTrigger asChild>
-                                  <Button
-                                    aria-haspopup="true"
-                                    size="icon"
-                                    variant="ghost"
-                                  >
-                                    <MoreHorizontal className="h-4 w-4" />
-                                    <span className="sr-only">Toggle menu</span>
-                                  </Button>
-                                </DropdownMenuTrigger>
-                                <DropdownMenuContent align="end">
-                                  <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                                  <DropdownMenuItem>Edit</DropdownMenuItem>
-                                  <DropdownMenuItem
-                                    onClick={() =>
-                                      handleDelete(client.client_id)
-                                    }
-                                  >
-                                    Delete
-                                  </DropdownMenuItem>
-                                </DropdownMenuContent>
-                              </DropdownMenu>
-                            </TableCell>
-                          </TableRow>
-                        ))}
+                        {clients.map((client) => renderClientData(client))}
                       </TableBody>
                     </Table>
                   </CardContent>
@@ -262,5 +327,24 @@ const ClientProgress = () => {
     </TooltipProvider>
   );
 };
+
+function ChevronDownIcon(props) {
+  return (
+    <svg
+      {...props}
+      xmlns="http://www.w3.org/2000/svg"
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path d="m6 9 6 6 6-6" />
+    </svg>
+  );
+}
 
 export default ClientProgress;

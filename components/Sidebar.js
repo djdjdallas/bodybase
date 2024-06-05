@@ -68,7 +68,7 @@ const Sidebar = () => {
           </Link>
           <div className="ml-12 space-y-4">
             <Link
-              href="/dashboard/client-progress/add-weekly-report"
+              href="/dashboard/add-weekly-report"
               className="flex items-center py-2.5 px-4 rounded transition duration-200 hover:bg-primary"
             >
               <PlusCircle className="h-5 w-5 text-base-content group-hover:text-black" />

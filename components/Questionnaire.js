@@ -59,7 +59,7 @@ const Questionnaire = () => {
   };
 
   return (
-    <div className="container mx-auto p-4 flex justify-center items-center min-h-screen">
+    <div className="container mx-auto p-4 flex justify-center items-center min-h-screen bg-[#FAFBFC]">
       <Card className="w-full max-w-md">
         {step === 1 && (
           <>
