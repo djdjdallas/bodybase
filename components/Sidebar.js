@@ -17,120 +17,92 @@ import {
 
 const Sidebar = () => {
   return (
-    <div className="border-r-[1px] bg-[#FFFFFF] min-h-screen w-[60px] hover:w-[250px] sticky top-0 space-y-6 py-7 px-2 transition-all duration-300 group">
+    <div className="group border-r-[1px] bg-white min-h-screen w-[80px] hover:w-[300px] sticky top-0 space-y-6 py-7 px-2 transition-all duration-500 ease-in-out">
       <ButtonAccount />
       <div className="space-y-4">
-        <Link
-          href="/dashboard/dash"
-          className="group flex items-center py-2.5 px-4 rounded transition duration-200 hover:bg-primary"
-        >
-          <LayoutDashboard className="h-8 w-8 text-base-content group-hover:text-black" />
-          <span className="sidebar-text ml-4 text-base-content hidden group-hover:inline group-focus:inline group-hover:text-black">
-            Dashboard
-          </span>
+        <Link href="/dashboard/dash">
+          <div className="flex items-center py-2.5 px-4 rounded transition-all duration-500 ease-in-out hover:bg-primary hover:text-white">
+            <LayoutDashboard className="h-8 w-8" />
+            <span className="ml-4 hidden group-hover:inline">Dashboard</span>
+          </div>
         </Link>
-        <Link
-          href="/dashboard/calendar"
-          className="group flex items-center py-2.5 px-4 rounded transition duration-200 hover:bg-primary"
-        >
-          <Calendar className="h-8 w-8 text-base-content group-hover:text-black" />
-          <span className="sidebar-text ml-4 text-base-content hidden group-hover:inline group-focus:inline group-hover:text-black">
-            Calendar
-          </span>
+        <Link href="/dashboard/calendar">
+          <div className="flex items-center py-2.5 px-4 rounded transition-all duration-500 ease-in-out hover:bg-primary hover:text-white">
+            <Calendar className="h-8 w-8" />
+            <span className="ml-4 hidden group-hover:inline">Calendar</span>
+          </div>
         </Link>
-        <Link
-          href="/dashboard/analytics"
-          className="group flex items-center py-2.5 px-4 rounded transition duration-200 hover:bg-primary"
-        >
-          <BarChart4 className="h-8 w-8 text-base-content group-hover:text-black" />
-          <span className="sidebar-text ml-4 text-base-content hidden group-hover:inline group-focus:inline group-hover:text-black">
-            Analytics
-          </span>
+        <Link href="/dashboard/analytics">
+          <div className="flex items-center py-2.5 px-4 rounded transition-all duration-500 ease-in-out hover:bg-primary hover:text-white">
+            <BarChart4 className="h-8 w-8" />
+            <span className="ml-4 hidden group-hover:inline">Analytics</span>
+          </div>
         </Link>
-        <Link
-          href="/dashboard/clients"
-          className="group flex items-center py-2.5 px-4 rounded transition duration-200 hover:bg-primary"
-        >
-          <UsersRound className="h-8 w-8 text-base-content group-hover:text-black" />
-          <span className="sidebar-text ml-4 text-base-content hidden group-hover:inline group-focus:inline group-hover:text-black">
-            Clients
-          </span>
+        <Link href="/dashboard/clients">
+          <div className="flex items-center py-2.5 px-4 rounded transition-all duration-500 ease-in-out hover:bg-primary hover:text-white">
+            <UsersRound className="h-8 w-8" />
+            <span className="ml-4 hidden group-hover:inline">Clients</span>
+          </div>
         </Link>
-        <div className="group">
-          <Link
-            href="/dashboard/client-progress"
-            className="flex items-center py-2.5 px-4 rounded transition duration-200 hover:bg-primary"
-          >
-            <LineChart className="h-8 w-8 text-base-content group-hover:text-black" />
-            <span className="sidebar-text ml-4 text-base-content hidden group-hover:inline group-focus:inline group-hover:text-black">
-              Client Progress
-            </span>
+        <div>
+          <Link href="/dashboard/client-progress">
+            <div className="flex items-center py-2.5 px-4 rounded transition-all duration-500 ease-in-out hover:bg-primary hover:text-white">
+              <LineChart className="h-8 w-8" />
+              <span className="ml-4 hidden group-hover:inline">
+                Client Progress
+              </span>
+            </div>
           </Link>
           <div className="ml-12 space-y-4">
-            <Link
-              href="/dashboard/add-weekly-report"
-              className="flex items-center py-2.5 px-4 rounded transition duration-200 hover:bg-primary"
-            >
-              <PlusCircle className="h-5 w-5 text-base-content group-hover:text-black" />
-              <span className="sidebar-text ml-4 text-base-content hidden group-hover:inline group-focus:inline group-hover:text-black">
-                Add Weekly Report
-              </span>
+            <Link href="/dashboard/client-progress/add-weekly-report">
+              <div className="flex items-center py-2.5 px-4 rounded transition-all duration-500 ease-in-out hover:bg-primary hover:text-white">
+                <PlusCircle className="h-5 w-5" />
+                <span className="ml-4 hidden group-hover:inline">
+                  Add Weekly Report
+                </span>
+              </div>
             </Link>
           </div>
         </div>
-        <Link
-          href="/dashboard/leads"
-          className="group flex items-center py-2.5 px-4 rounded transition duration-200 hover:bg-primary"
-        >
-          <Contact className="h-8 w-8 text-base-content group-hover:text-black" />
-          <span className="sidebar-text ml-4 text-base-content hidden group-hover:inline group-focus:inline group-hover:text-black">
-            Leads
-          </span>
+        <Link href="/dashboard/leads">
+          <div className="flex items-center py-2.5 px-4 rounded transition-all duration-500 ease-in-out hover:bg-primary hover:text-white">
+            <Contact className="h-8 w-8" />
+            <span className="ml-4 hidden group-hover:inline">Leads</span>
+          </div>
         </Link>
-        <Link
-          href="/dashboard/workout"
-          className="group flex items-center py-2.5 px-4 rounded transition duration-200 hover:bg-primary"
-        >
-          <Dumbbell className="h-8 w-8 text-base-content group-hover:text-black" />
-          <span className="sidebar-text ml-4 text-base-content hidden group-hover:inline group-focus:inline group-hover:text-black">
-            Workout Generator
-          </span>
+        <Link href="/dashboard/workout">
+          <div className="flex items-center py-2.5 px-4 rounded transition-all duration-500 ease-in-out hover:bg-primary hover:text-white">
+            <Dumbbell className="h-8 w-8" />
+            <span className="ml-4 hidden group-hover:inline">
+              Workout Generator
+            </span>
+          </div>
         </Link>
-        <Link
-          href="/dashboard/mealprep"
-          className="group flex items-center py-2.5 px-4 rounded transition duration-200 hover:bg-primary"
-        >
-          <Utensils className="h-8 w-8 text-base-content group-hover:text-black" />
-          <span className="sidebar-text ml-4 text-base-content hidden group-hover:inline group-focus:inline group-hover:text-black">
-            Meal Prep Generator
-          </span>
+        <Link href="/dashboard/mealprep">
+          <div className="flex items-center py-2.5 px-4 rounded transition-all duration-500 ease-in-out hover:bg-primary hover:text-white">
+            <Utensils className="h-8 w-8" />
+            <span className="ml-4 hidden group-hover:inline">
+              Meal Prep Generator
+            </span>
+          </div>
         </Link>
-        <Link
-          href="/dashboard/video"
-          className="group flex items-center py-2.5 px-4 rounded transition duration-200 hover:bg-primary"
-        >
-          <Video className="h-8 w-8 text-base-content group-hover:text-black" />
-          <span className="sidebar-text ml-4 text-base-content hidden group-hover:inline group-focus:inline group-hover:text-black">
-            Video
-          </span>
+        <Link href="/dashboard/video">
+          <div className="flex items-center py-2.5 px-4 rounded transition-all duration-500 ease-in-out hover:bg-primary hover:text-white">
+            <Video className="h-8 w-8" />
+            <span className="ml-4 hidden group-hover:inline">Video</span>
+          </div>
         </Link>
-        <Link
-          href="/dashboard/think-tank"
-          className="group flex items-center py-2.5 px-4 rounded transition duration-200 hover:bg-primary"
-        >
-          <Brain className="h-8 w-8 text-base-content group-hover:text-black" />
-          <span className="sidebar-text ml-4 text-base-content hidden group-hover:inline group-focus:inline group-hover:text-black">
-            Think Tank
-          </span>
+        <Link href="/dashboard/think-tank">
+          <div className="flex items-center py-2.5 px-4 rounded transition-all duration-500 ease-in-out hover:bg-primary hover:text-white">
+            <Brain className="h-8 w-8" />
+            <span className="ml-4 hidden group-hover:inline">Think Tank</span>
+          </div>
         </Link>
-        <Link
-          href="/dashboard/settings"
-          className="group flex items-center py-2.5 px-4 rounded transition duration-200 hover:bg-primary"
-        >
-          <Settings className="h-8 w-8 text-base-content group-hover:text-black" />
-          <span className="sidebar-text ml-4 text-base-content hidden group-hover:inline group-focus:inline group-hover:text-black">
-            Settings
-          </span>
+        <Link href="/dashboard/settings">
+          <div className="flex items-center py-2.5 px-4 rounded transition-all duration-500 ease-in-out hover:bg-primary hover:text-white">
+            <Settings className="h-8 w-8" />
+            <span className="ml-4 hidden group-hover:inline">Settings</span>
+          </div>
         </Link>
       </div>
     </div>

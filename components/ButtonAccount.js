@@ -2,16 +2,15 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Popover, Transition } from "@headlessui/react";
+import {
+  Popover,
+  PopoverButton,
+  PopoverPanel,
+  Transition,
+} from "@headlessui/react";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import apiClient from "@/libs/api";
 
-// A button to show user some account actions
-//  1. Billing: open a Stripe Customer Portal to manage their billing (cancel subscription, update payment method, etc.).
-//     You have to manually activate the Customer Portal in your Stripe Dashboard (https://dashboard.stripe.com/test/settings/billing/portal)
-//     This is only available if the customer has a customerId (they made a purchase previously)
-//  2. Logout: sign out and go back to homepage
-// See more at https://shipfa.st/docs/components/buttonAccount
 const ButtonAccount = () => {
   const supabase = createClientComponentClient();
   const [isLoading, setIsLoading] = useState(false);
@@ -20,7 +19,6 @@ const ButtonAccount = () => {
   useEffect(() => {
     const getUser = async () => {
       const { data } = await supabase.auth.getUser();
-
       setUser(data.user);
     };
 
@@ -49,10 +47,10 @@ const ButtonAccount = () => {
   };
 
   return (
-    <Popover className="relative z-10">
+    <Popover className="relative z-10 group">
       {({ open }) => (
         <>
-          <Popover.Button className="btn">
+          <PopoverButton className="flex items-center btn">
             {user?.user_metadata?.avatar_url ? (
               <img
                 src={user?.user_metadata?.avatar_url}
@@ -68,9 +66,11 @@ const ButtonAccount = () => {
               </span>
             )}
 
-            {user?.user_metadata?.name ||
-              user?.email?.split("@")[0] ||
-              "Account"}
+            <span className="ml-4 hidden group-hover:inline">
+              {user?.user_metadata?.name ||
+                user?.email?.split("@")[0] ||
+                "Account"}
+            </span>
 
             {isLoading ? (
               <span className="loading loading-spinner loading-xs"></span>
@@ -90,7 +90,7 @@ const ButtonAccount = () => {
                 />
               </svg>
             )}
-          </Popover.Button>
+          </PopoverButton>
           <Transition
             enter="transition duration-100 ease-out"
             enterFrom="transform scale-95 opacity-0"
@@ -99,7 +99,7 @@ const ButtonAccount = () => {
             leaveFrom="transform scale-100 opacity-100"
             leaveTo="transform scale-95 opacity-0"
           >
-            <Popover.Panel className="absolute left-0 z-10 mt-3 w-screen max-w-[16rem] transform">
+            <PopoverPanel className="absolute left-0 z-10 mt-3 w-screen max-w-[16rem] transform">
               <div className="overflow-hidden rounded-xl shadow-xl ring-1 ring-base-content ring-opacity-5 bg-base-100 p-1">
                 <div className="space-y-0.5 text-sm">
                   <button
@@ -145,7 +145,7 @@ const ButtonAccount = () => {
                   </button>
                 </div>
               </div>
-            </Popover.Panel>
+            </PopoverPanel>
           </Transition>
         </>
       )}

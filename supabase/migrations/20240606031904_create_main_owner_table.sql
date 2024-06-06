@@ -1,0 +1,6 @@
+CREATE TABLE
+  main_owner(
+    id BIGINT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+    NAME TEXT,
+    email TEXT
+  );
