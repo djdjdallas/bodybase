@@ -6,8 +6,8 @@ import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import toast from "react-hot-toast";
 import config from "@/config";
 
-// This a login/singup page for Supabase Auth.
-// Successfull login redirects to /api/auth/callback where the Code Exchange is processed (see app/api/auth/callback/route.js).
+// This is a login/signup page for Supabase Auth.
+// Successful login redirects to /api/auth/callback where the Code Exchange is processed (see app/api/auth/callback/route.js).
 export default function Login() {
   const supabase = createClientComponentClient();
   const [email, setEmail] = useState("");
@@ -24,26 +24,27 @@ export default function Login() {
       const redirectURL = window.location.origin + "/api/auth/callback";
 
       if (type === "oauth") {
-        await supabase.auth.signInWithOAuth({
+        const { error } = await supabase.auth.signInWithOAuth({
           provider,
           options: {
             redirectTo: redirectURL,
           },
         });
+        if (error) throw error;
       } else if (type === "magic_link") {
-        await supabase.auth.signInWithOtp({
+        const { error } = await supabase.auth.signInWithOtp({
           email,
           options: {
             emailRedirectTo: redirectURL,
           },
         });
+        if (error) throw error;
 
         toast.success("Check your emails!");
-
         setIsDisabled(true);
       }
     } catch (error) {
-      console.log(error);
+      console.log("Sign-in error:", error);
     } finally {
       setIsLoading(false);
     }
@@ -69,7 +70,7 @@ export default function Login() {
         </Link>
       </div>
       <h1 className="text-3xl md:text-4xl font-extrabold tracking-tight text-center mb-12">
-        Sign-in to {config.appName}{" "}
+        Sign-in to {config.appName}
       </h1>
 
       <div className="space-y-8 max-w-xl mx-auto">

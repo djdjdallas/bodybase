@@ -14,10 +14,10 @@ import {
   Brain,
   PlusCircle,
 } from "lucide-react";
-
+import "/Users/dominickhill/Fitpro/bodybase/app/styles/sidebar.css";
 const Sidebar = () => {
   return (
-    <div className="group border-r-[1px] bg-white min-h-screen w-[80px] hover:w-[300px] sticky top-0 space-y-6 py-7 px-2 transition-all duration-500 ease-in-out">
+    <div className="side-bar group border-r-[1px] bg-white min-h-screen w-[80px] hover:w-[300px] sticky top-0 space-y-6 py-7 px-2 transition-all duration-500 ease-in-out">
       <ButtonAccount />
       <div className="space-y-4">
         <Link href="/dashboard/dash">

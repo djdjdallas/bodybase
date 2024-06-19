@@ -1,4 +1,5 @@
 "use client";
+
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import {
@@ -9,7 +10,7 @@ import {
   MoreHorizontal,
   PanelLeft,
 } from "lucide-react";
-
+import "/Users/dominickhill/Fitpro/bodybase/app/globals.css";
 import { Badge } from "@/components/ui/badge";
 import {
   Breadcrumb,
@@ -50,15 +51,27 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import AddClientModal from "@/components/AddClientModal";
-import { supabase } from "@/app/utils/supabaseClient";
+import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 
 const Clients = () => {
+  const supabase = createClientComponentClient();
   const [open, setOpen] = useState(false);
   const [clients, setClients] = useState([]);
+  const [user, setUser] = useState(null);
 
   useEffect(() => {
+    const fetchUser = async () => {
+      const { data, error } = await supabase.auth.getUser();
+      if (error) {
+        console.log("Error retrieving user:", error);
+      } else {
+        console.log("Retrieved user data:", data);
+        setUser(data.user);
+      }
+    };
+
     const fetchClients = async () => {
-      const { data, error } = await supabase.from("new_clients").select("*");
+      const { data, error } = await supabase.from("main_clients").select("*");
       if (error) {
         console.error("Error fetching clients: ", error);
       } else {
@@ -66,13 +79,14 @@ const Clients = () => {
       }
     };
 
+    fetchUser();
     fetchClients();
-  }, []);
+  }, [supabase]);
 
   const handleDelete = async (id) => {
     try {
       const { error } = await supabase
-        .from("new_clients")
+        .from("main_clients")
         .delete()
         .eq("id", id);
       if (error) {
@@ -141,15 +155,17 @@ const Clients = () => {
             </Link>
           </header>
           <main className="grid flex-1 items-start gap-4 p-4 sm:px-6 sm:py-0 md:gap-8">
+            {user && (
+              <div className="mb-4 p-4 bg-green-100 rounded-md">
+                Logged in as: {user.email}
+              </div>
+            )}
             <Tabs defaultValue="all">
               <div className="flex items-center">
                 <TabsList>
                   <TabsTrigger value="all">All</TabsTrigger>
                   <TabsTrigger value="active">Active</TabsTrigger>
-                  <TabsTrigger value="draft">Draft</TabsTrigger>
-                  <TabsTrigger value="archived" className="hidden sm:flex">
-                    Archived
-                  </TabsTrigger>
+                  <TabsTrigger value="draft">Inactive</TabsTrigger>
                 </TabsList>
                 <div className="ml-auto flex items-center gap-2">
                   <DropdownMenu>
@@ -182,7 +198,7 @@ const Clients = () => {
                 </div>
               </div>
               <TabsContent value="all">
-                <Card x-chunk="dashboard-06-chunk-0">
+                <Card>
                   <CardHeader>
                     <CardTitle>Clients</CardTitle>
                     <CardDescription>
@@ -193,7 +209,8 @@ const Clients = () => {
                     <Table>
                       <TableHeader>
                         <TableRow>
-                          <TableHead>Name</TableHead>
+                          <TableHead>First Name</TableHead>
+                          <TableHead>Last Name</TableHead>
                           <TableHead>Status</TableHead>
                           <TableHead className="hidden md:table-cell">
                             Price
@@ -212,24 +229,27 @@ const Clients = () => {
                       <TableBody>
                         {clients.map((client) => (
                           <TableRow key={client.id}>
-                            <TableCell className="font-medium">
-                              {client.name}
+                            <TableCell className="font-medium text-gray-800">
+                              {client.first_name}
                             </TableCell>
-                            <TableCell>
+                            <TableCell className="font-medium text-gray-800">
+                              {client.last_name}
+                            </TableCell>
+                            <TableCell className="text-gray-800">
                               <Badge variant="outline">{client.status}</Badge>
                             </TableCell>
-                            <TableCell className="hidden md:table-cell">
+                            <TableCell className="hidden md:table-cell text-gray-800">
                               {client.price}
                             </TableCell>
-                            <TableCell className="hidden md:table-cell">
+                            <TableCell className="hidden md:table-cell text-gray-800">
                               {client.total_sales}
                             </TableCell>
-                            <TableCell className="hidden md:table-cell">
+                            <TableCell className="hidden md:table-cell text-gray-800">
                               {new Date(
                                 client.member_since
                               ).toLocaleDateString()}
                             </TableCell>
-                            <TableCell>
+                            <TableCell className="text-gray-800">
                               <DropdownMenu>
                                 <DropdownMenuTrigger asChild>
                                   <Button

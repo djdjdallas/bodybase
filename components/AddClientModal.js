@@ -1,22 +1,14 @@
 "use client";
-import { useState } from "react";
+import { useState, Fragment } from "react";
 import {
   Dialog,
   DialogPanel,
   Transition,
   TransitionChild,
 } from "@headlessui/react";
-import { Fragment } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import {
-  Select,
-  SelectTrigger,
-  SelectContent,
-  SelectItem,
-  SelectValue,
-} from "@/components/ui/select";
 import {
   Card,
   CardContent,
@@ -24,10 +16,11 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { supabase } from "@/app/utils/supabaseClient"; // Ensure you have configured Supabase client
-import { useToast } from "@/components/ui/use-toast"; // Import the useToast hook
+import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+import { useToast } from "@/components/ui/use-toast";
 
 export default function AddClientModal({ open, onClose }) {
+  const supabase = createClientComponentClient();
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -35,13 +28,22 @@ export default function AddClientModal({ open, onClose }) {
     phone: "",
     gender: "",
     dateOfBirth: "",
-    startWeight: "",
-    startBodyFatPercentage: "",
-    startBmi: "",
+    body_weight: "",
+    body_fat_percentage: "",
+    bmi: "",
     notes: "",
   });
+  const [session, setSession] = useState(null);
+  const { toast } = useToast();
 
-  const { toast } = useToast(); // Destructure the toast function from useToast
+  useState(() => {
+    const fetchSession = async () => {
+      const { data } = await supabase.auth.getSession();
+      setSession(data.session);
+    };
+
+    fetchSession();
+  }, [supabase]);
 
   const handleChange = (e) => {
     const { id, value } = e.target;
@@ -52,8 +54,19 @@ export default function AddClientModal({ open, onClose }) {
   };
 
   const handleSubmit = async () => {
+    if (!session) {
+      toast({
+        title: "Error",
+        description: "User not authenticated.",
+        variant: "destructive",
+      });
+      return;
+    }
+
     try {
-      const { data, error } = await supabase.from("fitness_clients").insert([
+      const user = session.user;
+
+      const { data, error } = await supabase.from("main_clients").insert([
         {
           first_name: formData.firstName,
           last_name: formData.lastName,
@@ -61,10 +74,11 @@ export default function AddClientModal({ open, onClose }) {
           phone: formData.phone,
           gender: formData.gender,
           date_of_birth: formData.dateOfBirth,
-          start_weight: formData.startWeight,
-          start_body_fat_percentage: formData.startBodyFatPercentage,
-          start_bmi: formData.startBmi,
+          body_weight: formData.body_weight,
+          body_fat_percentage: formData.body_fat_percentage,
+          bmi: formData.bmi,
           notes: formData.notes,
+          user_id: user.id,
         },
       ]);
 
@@ -193,39 +207,39 @@ export default function AddClientModal({ open, onClose }) {
                         />
                       </div>
                       <div className="grid gap-3">
-                        <Label htmlFor="startWeight">
+                        <Label htmlFor="body_weight">
                           Starting Weight (kg)
                         </Label>
                         <Input
-                          id="startWeight"
+                          id="body_weight"
                           type="number"
                           step="0.1"
                           className="w-full"
-                          value={formData.startWeight}
+                          value={formData.body_weight}
                           onChange={handleChange}
                         />
                       </div>
                       <div className="grid gap-3">
-                        <Label htmlFor="startBodyFatPercentage">
+                        <Label htmlFor="body_fat_percentage">
                           Starting Body Fat Percentage (%)
                         </Label>
                         <Input
-                          id="startBodyFatPercentage"
+                          id="body_fat_percentage"
                           type="number"
                           step="0.1"
                           className="w-full"
-                          value={formData.startBodyFatPercentage}
+                          value={formData.body_fat_percentage}
                           onChange={handleChange}
                         />
                       </div>
                       <div className="grid gap-3">
-                        <Label htmlFor="startBmi">Starting BMI</Label>
+                        <Label htmlFor="bmi">Starting BMI</Label>
                         <Input
-                          id="startBmi"
+                          id="bmi"
                           type="number"
                           step="0.1"
                           className="w-full"
-                          value={formData.startBmi}
+                          value={formData.bmi}
                           onChange={handleChange}
                         />
                       </div>

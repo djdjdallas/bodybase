@@ -1,4 +1,3 @@
-/* eslint-disable @next/next/no-img-element */
 "use client";
 
 import { useState, useEffect } from "react";
@@ -18,8 +17,13 @@ const ButtonAccount = () => {
 
   useEffect(() => {
     const getUser = async () => {
-      const { data } = await supabase.auth.getUser();
-      setUser(data.user);
+      const { data, error } = await supabase.auth.getUser();
+      if (error) {
+        console.log("Error retrieving user:", error);
+      } else {
+        console.log("Retrieved user data:", data);
+        setUser(data.user);
+      }
     };
 
     getUser();
@@ -40,7 +44,7 @@ const ButtonAccount = () => {
 
       window.location.href = url;
     } catch (e) {
-      console.error(e);
+      console.error("Billing error:", e);
     }
 
     setIsLoading(false);
